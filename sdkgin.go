@@ -32,7 +32,7 @@ func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler *event.
 	// 回写结果
 	err = write(ctx, writer, eventResp)
 	if err != nil {
-		panic(err)
+		reqHandler.Logger.Error(ctx, fmt.Sprintf("write resp result error:%s", err.Error()))
 	}
 }
 
