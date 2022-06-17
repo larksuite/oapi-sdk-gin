@@ -24,7 +24,8 @@ import (
 
 
 func main() {
-  // 创建消息事件处理器
+
+	// 创建消息事件处理器
 	handler := dispatcher.NewEventReqDispatcher("v", "1212121212").OnMessageReceiveV1(func(ctx context.Context, event *im.MessageReceiveEvent) error {
 		fmt.Println(core.Prettify(event))
 		return nil
@@ -50,14 +51,14 @@ func main() {
 		return nil, nil
 	})
 
-  // 创建gin服务
+	// 创建gin服务
 	g := gin.Default()
 
-  // 配置路由
+	// 配置路由
 	g.POST("/webhook/event", sdkgin.NewEventReqHandlerFunc(handler))
 	g.POST("/webhook/card", sdkgin.NewCardActionHandlerFunc(cardHandler))
 
-  // 启动服务
+	// 启动服务
 	err := g.Run(":9999")
 	if err != nil {
 		panic(err)
