@@ -39,14 +39,14 @@ func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler *event.
 func NewCardActionHandlerFunc(cardActionHandler *card.CardActionHandler, options ...event.OptionFunc) func(c *gin.Context) {
 
 	// 构建模板类
-	reqHandler := card.NewTemplateReqHandler(cardActionHandler, options...)
+	reqHandler := card.NewReqHandlerTemplate(cardActionHandler, options...)
 	return func(c *gin.Context) {
 		doProcess(c.Writer, c.Request, reqHandler, options...)
 	}
 }
 
 func NewEventReqHandlerFunc(eventReqDispatcher *dispatcher.EventReqDispatcher, options ...event.OptionFunc) func(c *gin.Context) {
-	reqHandler := dispatcher.NewTemplateReqHandler(eventReqDispatcher, options...)
+	reqHandler := dispatcher.NewReqHandlerTemplate(eventReqDispatcher, options...)
 	return func(c *gin.Context) {
 		doProcess(c.Writer, c.Request, reqHandler, options...)
 	}
