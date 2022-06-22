@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/larksuite/oapi-sdk-go/card"
 	"github.com/larksuite/oapi-sdk-go/core"
-	"github.com/larksuite/oapi-sdk-go/dispatcher"
+	"github.com/larksuite/oapi-sdk-go/event/dispatcher"
 	"github.com/larksuite/oapi-sdk-go/service/contact/v3"
 	"github.com/larksuite/oapi-sdk-go/service/im/v1"
 )
@@ -42,7 +42,7 @@ func TestStartGin(t *testing.T) {
 
 	g := gin.Default()
 
-	g.POST("/webhook/event", NewEventReqHandlerFunc(handler))
+	g.POST("/webhook/event", NewEventHandlerFunc(handler))
 	g.POST("/webhook/card", NewCardActionHandlerFunc(cardHandler))
 
 	err := g.Run(":9999")

@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/larksuite/oapi-sdk-go/card"
 	"github.com/larksuite/oapi-sdk-go/core"
-	"github.com/larksuite/oapi-sdk-go/dispatcher"
 	"github.com/larksuite/oapi-sdk-go/event"
+	"github.com/larksuite/oapi-sdk-go/event/dispatcher"
 )
 
 func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler *event.ReqHandler, options ...event.OptionFunc) {
@@ -45,7 +45,7 @@ func NewCardActionHandlerFunc(cardActionHandler *card.CardActionHandler, options
 	}
 }
 
-func NewEventReqHandlerFunc(eventReqDispatcher *dispatcher.EventReqDispatcher, options ...event.OptionFunc) func(c *gin.Context) {
+func NewEventHandlerFunc(eventReqDispatcher *dispatcher.EventReqDispatcher, options ...event.OptionFunc) func(c *gin.Context) {
 	reqHandler := dispatcher.NewReqHandlerTemplate(eventReqDispatcher, options...)
 	return func(c *gin.Context) {
 		doProcess(c.Writer, c.Request, reqHandler, options...)
