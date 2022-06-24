@@ -1,4 +1,4 @@
-package sdkgin
+package gin_ext
 
 import (
 	"context"
@@ -24,10 +24,7 @@ func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler event.I
 	}
 
 	//处理请求
-	eventResp, err := reqHandler.Handle(ctx, eventReq)
-	if err != nil {
-		eventResp = processError(ctx, reqHandler.Logger(), req.RequestURI, err)
-	}
+	eventResp := reqHandler.Handle(ctx, eventReq)
 
 	// 回写结果
 	err = write(ctx, writer, eventResp)

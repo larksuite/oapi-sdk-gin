@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/larksuite/oapi-sdk-go v1.1.47-0.20220623074029-b95453843b5f
+	github.com/larksuite/oapi-sdk-go v1.1.47-0.20220624061605-71b35c4345d4
 )
 
 require (
