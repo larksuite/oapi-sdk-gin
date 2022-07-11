@@ -1,4 +1,4 @@
-package ginext
+package sdkginext
 
 import (
 	"context"
