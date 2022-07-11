@@ -15,20 +15,23 @@ import (
 
 func TestStartGin(t *testing.T) {
 
-	handler := dispatcher.NewEventDispatcher("v", "1212121212").OnMessageReceiveV1(func(ctx context.Context, event *larkim.MessageReceiveEvent) error {
-		fmt.Println(core.Prettify(event))
+	handler := dispatcher.NewEventDispatcher("v", "").OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
+		fmt.Println(larkcore.Prettify(event))
+		fmt.Println(event.RequestId())
 		return nil
-	}).OnMessageReadV1(func(ctx context.Context, event *larkim.MessageReadEvent) error {
-		fmt.Println(core.Prettify(event))
+	}).OnP2MessageReadV1(func(ctx context.Context, event *larkim.P2MessageReadV1) error {
+		fmt.Println(larkcore.Prettify(event))
+		fmt.Println(event.RequestId())
 		return nil
-	}).OnUserCreatedV3(func(ctx context.Context, event *larkcontact.UserCreatedEvent) error {
-		fmt.Println(core.Prettify(event))
+	}).OnP2UserCreatedV3(func(ctx context.Context, event *larkcontact.P2UserCreatedV3) error {
+		fmt.Println(larkcore.Prettify(event))
+		fmt.Println(event.RequestId())
 		return nil
 	})
 
 	// 创建card处理器
-	cardHandler := card.NewCardActionHandler("v", "", func(ctx context.Context, cardAction *card.CardAction) (interface{}, error) {
-		fmt.Println(core.Prettify(cardAction))
+	cardHandler := larkcard.NewCardActionHandler("v", "", func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
+		fmt.Println(larkcore.Prettify(cardAction))
 
 		// 返回卡片消息
 		//return getCard(),nil

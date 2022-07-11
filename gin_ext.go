@@ -13,7 +13,7 @@ import (
 	"github.com/larksuite/oapi-sdk-go/event/dispatcher"
 )
 
-func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler event.IReqHandler, options ...event.OptionFunc) {
+func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler larkevent.IReqHandler, options ...larkevent.OptionFunc) {
 	// 转换http请求对象为标准请求对象
 	ctx := context.Background()
 	eventReq, err := translate(ctx, req)
@@ -33,7 +33,7 @@ func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler event.I
 	}
 }
 
-func NewCardActionHandlerFunc(cardActionHandler *card.CardActionHandler, options ...event.OptionFunc) func(c *gin.Context) {
+func NewCardActionHandlerFunc(cardActionHandler *larkcard.CardActionHandler, options ...larkevent.OptionFunc) func(c *gin.Context) {
 
 	// 构建模板类
 	cardActionHandler.InitConfig(options...)
@@ -42,26 +42,26 @@ func NewCardActionHandlerFunc(cardActionHandler *card.CardActionHandler, options
 	}
 }
 
-func NewEventHandlerFunc(eventDispatcher *dispatcher.EventDispatcher, options ...event.OptionFunc) func(c *gin.Context) {
+func NewEventHandlerFunc(eventDispatcher *dispatcher.EventDispatcher, options ...larkevent.OptionFunc) func(c *gin.Context) {
 	eventDispatcher.InitConfig(options...)
 	return func(c *gin.Context) {
 		doProcess(c.Writer, c.Request, eventDispatcher, options...)
 	}
 }
 
-func processError(ctx context.Context, logger core.Logger, path string, err error) *event.EventResp {
+func processError(ctx context.Context, logger larkcore.Logger, path string, err error) *larkevent.EventResp {
 	header := map[string][]string{}
-	header[event.ContentTypeHeader] = []string{event.DefaultContentType}
-	eventResp := &event.EventResp{
+	header[larkevent.ContentTypeHeader] = []string{larkevent.DefaultContentType}
+	eventResp := &larkevent.EventResp{
 		Header:     header,
-		Body:       []byte(fmt.Sprintf(event.WebhookResponseFormat, err.Error())),
+		Body:       []byte(fmt.Sprintf(larkevent.WebhookResponseFormat, err.Error())),
 		StatusCode: http.StatusInternalServerError,
 	}
 	logger.Error(ctx, fmt.Sprintf("event handle err:%s, %v", path, err))
 	return eventResp
 }
 
-func write(ctx context.Context, writer http.ResponseWriter, eventResp *event.EventResp) error {
+func write(ctx context.Context, writer http.ResponseWriter, eventResp *larkevent.EventResp) error {
 	writer.WriteHeader(eventResp.StatusCode)
 	for k, vs := range eventResp.Header {
 		for _, v := range vs {
@@ -75,14 +75,15 @@ func write(ctx context.Context, writer http.ResponseWriter, eventResp *event.Eve
 	}
 	return nil
 }
-func translate(ctx context.Context, req *http.Request) (*event.EventReq, error) {
+func translate(ctx context.Context, req *http.Request) (*larkevent.EventReq, error) {
 	rawBody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return nil, err
 	}
-	eventReq := &event.EventReq{
-		Header: req.Header,
-		Body:   rawBody,
+	eventReq := &larkevent.EventReq{
+		Header:     req.Header,
+		Body:       rawBody,
+		RequestURI: req.RequestURI,
 	}
 
 	return eventReq, nil
