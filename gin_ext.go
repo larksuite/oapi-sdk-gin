@@ -1,4 +1,4 @@
-package gin_ext
+package ginext
 
 import (
 	"context"

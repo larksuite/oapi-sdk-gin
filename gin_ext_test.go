@@ -1,4 +1,4 @@
-package gin_ext
+package ginext
 
 import (
 	"context"
@@ -15,6 +15,7 @@ import (
 
 func TestStartGin(t *testing.T) {
 
+	// 注册消息处理器
 	handler := dispatcher.NewEventDispatcher("v", "").OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
 		fmt.Println(larkcore.Prettify(event))
 		fmt.Println(event.RequestId())
