@@ -6,11 +6,11 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/larksuite/oapi-sdk-go/card"
-	"github.com/larksuite/oapi-sdk-go/core"
-	"github.com/larksuite/oapi-sdk-go/event/dispatcher"
-	"github.com/larksuite/oapi-sdk-go/service/contact/v3"
-	"github.com/larksuite/oapi-sdk-go/service/im/v1"
+	"github.com/larksuite/oapi-sdk-go/v3/card"
+	"github.com/larksuite/oapi-sdk-go/v3/core"
+	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
+	"github.com/larksuite/oapi-sdk-go/v3/service/contact/v3"
+	"github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
 func TestStartGin(t *testing.T) {
