@@ -14,9 +14,8 @@ import (
 )
 
 func TestStartGin(t *testing.T) {
-
-	// 注册消息处理器
-	handler := dispatcher.NewEventDispatcher("v", "").OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
+	// 创建注册消息处理器
+	handler := dispatcher.NewEventDispatcher("v", "e").OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
 		fmt.Println(larkcore.Prettify(event))
 		fmt.Println(event.RequestId())
 		return nil
@@ -30,12 +29,12 @@ func TestStartGin(t *testing.T) {
 		return nil
 	})
 
-	// 创建card处理器
+	// 创建卡片行为处理器
 	cardHandler := larkcard.NewCardActionHandler("v", "", func(ctx context.Context, cardAction *larkcard.CardAction) (interface{}, error) {
 		fmt.Println(larkcore.Prettify(cardAction))
 
 		// 返回卡片消息
-		//return getCard(),nil
+		//return getCard(), nil
 
 		//custom resp
 		//return getCustomResp(),nil
@@ -44,14 +43,87 @@ func TestStartGin(t *testing.T) {
 		return nil, nil
 	})
 
+	// 注册处理器
 	g := gin.Default()
-
 	g.POST("/webhook/event", NewEventHandlerFunc(handler))
 	g.POST("/webhook/card", NewCardActionHandlerFunc(cardHandler))
 
+	// 启动服务
 	err := g.Run(":9999")
 	if err != nil {
 		panic(err)
 	}
+}
 
+func getCard() *larkcard.MessageCard {
+	// config
+	config := larkcard.NewMessageCardConfig().
+		WideScreenMode(true).
+		EnableForward(true).
+		UpdateMulti(false).
+		Build()
+
+	// CardUrl
+	cardLink := larkcard.NewMessageCardURL().
+		PcUrl("http://www.baidu.com").
+		IoSUrl("http://www.google.com").
+		Url("http://open.feishu.com").
+		AndroidUrl("http://www.jianshu.com").
+		Build()
+
+	// header
+	header := larkcard.NewMessageCardHeader().
+		Template("turquoise").
+		Title(larkcard.NewMessageCardPlainText().
+			Content("[已处理] 1 级报警 - 数据平台").
+			Build()).
+		Build()
+
+	// Elements
+	divElement := larkcard.NewMessageCardDiv().
+		Fields([]*larkcard.MessageCardField{larkcard.NewMessageCardField().
+			Text(larkcard.NewMessageCardLarkMd().
+				Content("**🕐 时间：**\\n2021-02-23 20:17:51").
+				Build()).
+			IsShort(true).
+			Build()}).
+		Build()
+
+	// 谁处理了问题
+	content := "✅ " + "name" + "已处理了此告警"
+	processPersonElement := larkcard.NewMessageCardDiv().
+		Fields([]*larkcard.MessageCardField{larkcard.NewMessageCardField().
+			Text(larkcard.NewMessageCardLarkMd().
+				Content(content).
+				Build()).
+			IsShort(true).
+			Build()}).
+		Build()
+
+	// 卡片消息体
+	messageCard := larkcard.NewMessageCard().
+		Config(config).
+		Header(header).
+		Elements([]larkcard.MessageCardElement{divElement, processPersonElement}).
+		CardLink(cardLink).
+		Build()
+
+	return messageCard
+}
+
+func getCustomResp() interface{} {
+	body := make(map[string]interface{})
+	body["content"] = "hello"
+
+	i18n := make(map[string]string)
+	i18n["zh_cn"] = "你好"
+	i18n["en_us"] = "hello"
+	i18n["ja_jp"] = "こんにちは"
+	body["i18n"] = i18n
+
+	resp := larkcard.CustomResp{
+		StatusCode: 400,
+		Body:       body,
+	}
+	return &resp
 }
