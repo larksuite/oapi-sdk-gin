@@ -17,6 +17,7 @@ import (
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	"github.com/larksuite/oapi-sdk-go/v3/service/contact/v3"
 	"github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
+	"github.com/larksuite/oapi-sdk-gin"
 )
 
 
@@ -52,8 +53,8 @@ func main() {
 
 	// 注册处理器
 	g := gin.Default()
-	g.POST("/webhook/event", NewEventHandlerFunc(handler))
-	g.POST("/webhook/card", NewCardActionHandlerFunc(cardHandler))
+	g.POST("/webhook/event", sdkginext.NewEventHandlerFunc(handler))
+	g.POST("/webhook/card", sdkginext.NewCardActionHandlerFunc(cardHandler))
 
 	// 启动服务
 	err := g.Run(":9999")
