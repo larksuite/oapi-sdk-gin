@@ -1,6 +1,13 @@
 # oapi-sdk-gin
 an  oapi-sdk-go extension package that integrates the Gin Web framework
 
+# 安装
+
+```go
+go get -u github.com/larksuite/oapi-sdk-gin/v1.0.0
+
+```
+
 
 # 使用示例
 
