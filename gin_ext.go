@@ -27,7 +27,7 @@ import (
 
 func doProcess(writer http.ResponseWriter, req *http.Request, reqHandler larkevent.IReqHandler, options ...larkevent.OptionFunc) {
 	// 转换http请求对象为标准请求对象
-	ctx := context.Background()
+	ctx := req.Context()
 	eventReq, err := translate(ctx, req)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
